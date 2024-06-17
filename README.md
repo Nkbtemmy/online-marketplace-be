@@ -44,9 +44,15 @@ Install the following dependencies globally on your system:
 3. Build the Docker images: `docker-compose build`
 4. Start the application: `docker-compose up` or
 5. Run ``make start`` or ``make dev`` if you have makefile installed
-6. For testing you can run ``make testing``
+6. For testing, you can run ``make testing``
 
 The API will be available at `http://localhost:8080`.
+### Docker Images Used
+- **marketplace-be**: The application image
+- **postgres-db**: PostgresSQL Database
+- **zookeeper-server**: Message Queue for kafka
+- **kafka-broker**: Kafka broker itself
+- **kafdrop-web**: Kafka UI help to visualizing kafka Topics and its contents
 
 ### API Documentation
 
