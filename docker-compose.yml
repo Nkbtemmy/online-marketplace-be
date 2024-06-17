@@ -1,0 +1,96 @@
+version: '3'
+services:
+  marketplace-be:
+    build: .
+    image: "marketplace:latest"
+    container_name: marketplace
+    ports:
+      - "9090:8080"
+    restart: on-failure
+    environment:
+      - SERVER_PORT=8080
+      - COMPONENT_ID=4
+      - SPRING_MAIN_ALLOW_CIRCULAR_REFERENCES=true
+      - HIBERNATE_ENABLE_LAZY_LOAD_NO_TRANS=true
+      - KAFKA_BROKER_URL=kafka-broker:9092
+      - KAFKA_GROUP_ID=5
+      - KAFKA_TOPIC_PARTITION=3
+      - KAFKA_TOPIC_REPLICATION_FACTOR=4
+      - JDBC_DATABASE_URL=jdbc:postgresql://postgres-db:5432/marketplace
+      - JDBC_DATABASE_USERNAME=postgres
+      - JDBC_DATABASE_PASSWORD=admin123!
+      - ENVIRONMENT=local
+    depends_on:
+      - kafka-broker
+      - postgres-db
+    networks:
+      - imanzi_mvp_network
+      - kafka-network
+
+  postgres-db:
+    image: postgres
+    container_name: postgres-db-marketplace
+    restart: always
+    ports:
+      - "5434:5432"
+    environment:
+      - POSTGRES_DB=marketplace
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=admin123!
+    command: [ "postgres", "-c", "max_connections=200", "-c", "timezone=Etc/UTC", "-c", "default_text_search_config=pg_catalog.english" ]
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - imanzi_mvp_network
+
+  # Kafka
+  zookeeper-server:
+    image: 'bitnami/zookeeper:latest'
+    container_name: "zookeeper-server-marketplace"
+    ports:
+      - '5181:2181'
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes
+    networks:
+      - kafka-network
+
+  kafka-broker:
+    image: 'bitnami/kafka:latest'
+    container_name: "kafka-broker-marketplace"
+    ports:
+      - '9092:9092'
+      - '29092:29092'
+    environment:
+      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper-server:2181
+      - KAFKA_CFG_ADVERTISED_LISTENERS=INSIDE://kafka-broker:9092,OUTSIDE://localhost:29092
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT
+      - KAFKA_CFG_LISTENERS=INSIDE://:9092,OUTSIDE://:29092
+      - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=INSIDE
+      - KAFKA_CFG_BROKER_ID=1
+      - ALLOW_PLAINTEXT_LISTENER=yes
+    depends_on:
+      - zookeeper-server
+    networks:
+      - kafka-network
+
+  kafdrop-web:
+    image: obsidiandynamics/kafdrop
+    container_name: "kafdrop-web-marketplace"
+    ports:
+      - '9000:9000'
+    environment:
+      - KAFKA_BROKERCONNECT=kafka-broker:9092
+    depends_on:
+      - kafka-broker
+    networks:
+      - kafka-network
+
+networks:
+  imanzi_mvp_network:
+    driver: bridge
+  kafka-network:
+    driver: bridge
+
+volumes:
+  postgres-data:
+  kafka-data:
