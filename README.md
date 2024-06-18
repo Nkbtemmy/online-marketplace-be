@@ -4,7 +4,8 @@ This is a comprehensive RESTful API for an online marketplace that allows users 
 
 ## Development
 
-Update your local database connection in `application.yml` or create your own `application-local.yml` file to override
+- Create `.env` file and copy in `.env.example` values
+- Update your local database connection in `application.yml` or create your own `application-local.yml` file to override
 settings for development.
 
 ## Features

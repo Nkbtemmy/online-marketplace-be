@@ -7,7 +7,7 @@ spring:
   profiles:
     active: ${ENVIRONMENT:local}
   datasource:
-    url: ${JDBC_DATABASE_URL:jdbc:postgresql://localhost:5432/marketplace}
+    url: ${JDBC_DATABASE_URL:jdbc:postgresql://localhost:5432/marketplace?createDatabaseIfNotExist=true}
     username: ${JDBC_DATABASE_USERNAME:postgres}
     password: ${JDBC_DATABASE_PASSWORD:admin123!}
     hikari:
@@ -74,10 +74,10 @@ error:
       ProductsNameUnique: PRODUCTS_NAME_UNIQUE
 
 jwt:
-  secret: your_secret_key
-  expiration: 3600000  # 1 hour in milliseconds
+  secret: ${JWT_SECRET:5d812504e725f0a97756cbc593e7cf91525e48e4e327f748617cc7c2d874e731}
+  expiration: ${JWT_EXPIRATION:3600000}  # 1 hour in milliseconds
 web:
-  url: "https://imanzi.netlify.app"
+  url: ${WEB_URL:https://imanzi.netlify.app}
 springdoc:
   pathsToMatch: /api/**
   api-docs:
