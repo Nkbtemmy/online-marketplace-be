@@ -4,7 +4,7 @@ This is a comprehensive RESTful API for an online marketplace that allows users 
 
 ## Development
 
-- Create `.env` file and copy in `.env.example` values
+- Make sure you created `.env` file and copy values of `.env.example` into it.
 - Update your local database connection in `application.yml` or create your own `application-local.yml` file to override
 settings for development.
 
@@ -71,7 +71,23 @@ The API is documented using Swagger OpenAPI 3.0. You can access the documentatio
 
 This project includes unit and integration tests with required coverage.
 
+# Default credentials for testing
 
+- For Admin
+``{
+  "email": "admin@example.com",
+  "password": "adminPass"
+}``
+- For Buyer
+  ``{
+  "email": "buyer@example.com",
+  "password": "buyerPass"
+  }``
+- For Seller
+  ``{
+  "email": "seller@example.com",
+  "password": "sellerPass"
+  }``
 ## Further readings
 
 * [Maven docs](https://maven.apache.org/guides/index.html)  

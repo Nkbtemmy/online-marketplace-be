@@ -5,8 +5,10 @@ services:
     image: "marketplace:latest"
     container_name: marketplace
     ports:
-      - "9090:8080"
+      - "8080:8080"
     restart: on-failure
+    env_file:
+      - .env
     environment:
       - SERVER_PORT=8080
       - COMPONENT_ID=4
